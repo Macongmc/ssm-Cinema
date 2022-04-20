@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ydlclass.dao.TRoomDao">
+
+    <resultMap type="com.ydlclass.entity.TRoom" id="TRoomMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="roomContent" column="room_content" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="num" column="num" jdbcType="INTEGER"/>
+        <result property="cinemaId" column="cinema_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TRoomMap">
+        select
+          id, name, room_content, type, num, cinema_id
+        from t_room
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TRoomMap">
+        select
+          id, name, room_content, type, num, cinema_id
+        from t_room
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_room
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="roomContent != null and roomContent != ''">
+                and room_content = #{roomContent}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="num != null">
+                and num = #{num}
+            </if>
+            <if test="cinemaId != null">
+                and cinema_id = #{cinemaId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_room(name, room_content, type, num, cinema_id)
+        values (#{name}, #{roomContent}, #{type}, #{num}, #{cinemaId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_room(name, room_content, type, num, cinema_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.name}, #{entity.roomContent}, #{entity.type}, #{entity.num}, #{entity.cinemaId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_room(name, room_content, type, num, cinema_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.roomContent}, #{entity.type}, #{entity.num}, #{entity.cinemaId})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        room_content = values(room_content),
+        type = values(type),
+        num = values(num),
+        cinema_id = values(cinema_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_room
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="roomContent != null and roomContent != ''">
+                room_content = #{roomContent},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="cinemaId != null">
+                cinema_id = #{cinemaId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from t_room where id = #{id}
+    </delete>
+
+</mapper>
+

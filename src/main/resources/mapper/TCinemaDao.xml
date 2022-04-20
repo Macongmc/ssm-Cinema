@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ydlclass.dao.TCinemaDao">
+
+    <resultMap type="com.ydlclass.entity.TCinema" id="TCinemaMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="areaId" column="area_id" jdbcType="VARCHAR"/>
+        <result property="areaContent" column="area_content" jdbcType="VARCHAR"/>
+        <result property="score" column="score" jdbcType="NUMERIC"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="characteristic" column="characteristic" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="discount" column="discount" jdbcType="VARCHAR"/>
+        <result property="imgUrl" column="img_url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TCinemaMap">
+        select
+          id, name, area_id, area_content, score, phone, characteristic, content, discount, img_url
+        from t_cinema
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TCinemaMap">
+        select
+          id, name, area_id, area_content, score, phone, characteristic, content, discount, img_url
+        from t_cinema
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_cinema
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="areaId != null and areaId != ''">
+                and area_id = #{areaId}
+            </if>
+            <if test="areaContent != null and areaContent != ''">
+                and area_content = #{areaContent}
+            </if>
+            <if test="score != null">
+                and score = #{score}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="characteristic != null and characteristic != ''">
+                and characteristic = #{characteristic}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="discount != null and discount != ''">
+                and discount = #{discount}
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                and img_url = #{imgUrl}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_cinema(name, area_id, area_content, score, phone, characteristic, content, discount, img_url)
+        values (#{name}, #{areaId}, #{areaContent}, #{score}, #{phone}, #{characteristic}, #{content}, #{discount}, #{imgUrl})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_cinema(name, area_id, area_content, score, phone, characteristic, content, discount, img_url)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.name}, #{entity.areaId}, #{entity.areaContent}, #{entity.score}, #{entity.phone}, #{entity.characteristic}, #{entity.content}, #{entity.discount}, #{entity.imgUrl})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_cinema(name, area_id, area_content, score, phone, characteristic, content, discount, img_url)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.areaId}, #{entity.areaContent}, #{entity.score}, #{entity.phone}, #{entity.characteristic}, #{entity.content}, #{entity.discount}, #{entity.imgUrl})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        area_id = values(area_id),
+        area_content = values(area_content),
+        score = values(score),
+        phone = values(phone),
+        characteristic = values(characteristic),
+        content = values(content),
+        discount = values(discount),
+        img_url = values(img_url)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_cinema
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="areaId != null and areaId != ''">
+                area_id = #{areaId},
+            </if>
+            <if test="areaContent != null and areaContent != ''">
+                area_content = #{areaContent},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="characteristic != null and characteristic != ''">
+                characteristic = #{characteristic},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="discount != null and discount != ''">
+                discount = #{discount},
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                img_url = #{imgUrl},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from t_cinema where id = #{id}
+    </delete>
+
+</mapper>
+

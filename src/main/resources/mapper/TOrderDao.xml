@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ydlclass.dao.TOrderDao">
+
+    <resultMap type="com.ydlclass.entity.TOrder" id="TOrderMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="recordId" column="record_id" jdbcType="INTEGER"/>
+        <result property="seatNum" column="seat_num" jdbcType="INTEGER"/>
+        <result property="seatInfo" column="seat_info" jdbcType="VARCHAR"/>
+        <result property="money" column="money" jdbcType="NUMERIC"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="addTime" column="add_time" jdbcType="TIMESTAMP"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TOrderMap">
+        select
+          id, user_id, record_id, seat_num, seat_info, money, status, add_time, phone
+        from t_order
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TOrderMap">
+        select
+          id, user_id, record_id, seat_num, seat_info, money, status, add_time, phone
+        from t_order
+
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_order
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="recordId != null">
+                and record_id = #{recordId}
+            </if>
+            <if test="seatNum != null">
+                and seat_num = #{seatNum}
+            </if>
+            <if test="seatInfo != null and seatInfo != ''">
+                and seat_info = #{seatInfo}
+            </if>
+            <if test="money != null">
+                and money = #{money}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="addTime != null">
+                and add_time = #{addTime}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_order(user_id, record_id, seat_num, seat_info, money, status, add_time, phone)
+        values (#{userId}, #{recordId}, #{seatNum}, #{seatInfo}, #{money}, #{status}, #{addTime}, #{phone})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_order(user_id, record_id, seat_num, seat_info, money, status, add_time, phone)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.userId}, #{entity.recordId}, #{entity.seatNum}, #{entity.seatInfo}, #{entity.money}, #{entity.status}, #{entity.addTime}, #{entity.phone})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_order(user_id, record_id, seat_num, seat_info, money, status, add_time, phone)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.recordId}, #{entity.seatNum}, #{entity.seatInfo}, #{entity.money}, #{entity.status}, #{entity.addTime}, #{entity.phone})
+        </foreach>
+        on duplicate key update
+        user_id = values(user_id),
+        record_id = values(record_id),
+        seat_num = values(seat_num),
+        seat_info = values(seat_info),
+        money = values(money),
+        status = values(status),
+        add_time = values(add_time),
+        phone = values(phone)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_order
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="recordId != null">
+                record_id = #{recordId},
+            </if>
+            <if test="seatNum != null">
+                seat_num = #{seatNum},
+            </if>
+            <if test="seatInfo != null and seatInfo != ''">
+                seat_info = #{seatInfo},
+            </if>
+            <if test="money != null">
+                money = #{money},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="addTime != null">
+                add_time = #{addTime},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from t_order where id = #{id}
+    </delete>
+
+</mapper>
+

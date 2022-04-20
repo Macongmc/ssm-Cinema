@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ydlclass.dao.TFilmDao">
+
+    <resultMap type="com.ydlclass.entity.TFilm" id="TFilmMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="engName" column="eng_name" jdbcType="VARCHAR"/>
+        <result property="language" column="language" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="showType" column="show_type" jdbcType="VARCHAR"/>
+        <result property="director" column="director" jdbcType="VARCHAR"/>
+        <result property="actors" column="actors" jdbcType="VARCHAR"/>
+        <result property="length" column="length" jdbcType="VARCHAR"/>
+        <result property="firstData" column="first_data" jdbcType="TIMESTAMP"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="score" column="score" jdbcType="NUMERIC"/>
+        <result property="simpleContent" column="simple_content" jdbcType="VARCHAR"/>
+        <result property="country" column="Country" jdbcType="VARCHAR"/>
+        <result property="imgUrl" column="img_url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TFilmMap">
+        select
+          id, name, eng_name, language, type, show_type, director, actors, length, first_data, content, score, simple_content, Country, img_url
+        from t_film
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TFilmMap">
+        select
+          id, name, eng_name, language, type, show_type, director, actors, length, first_data, content, score, simple_content, Country, img_url
+        from t_film
+
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from t_film
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="engName != null and engName != ''">
+                and eng_name = #{engName}
+            </if>
+            <if test="language != null and language != ''">
+                and language = #{language}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="showType != null and showType != ''">
+                and show_type = #{showType}
+            </if>
+            <if test="director != null and director != ''">
+                and director = #{director}
+            </if>
+            <if test="actors != null and actors != ''">
+                and actors = #{actors}
+            </if>
+            <if test="length != null and length != ''">
+                and length = #{length}
+            </if>
+            <if test="firstData != null">
+                and first_data = #{firstData}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="score != null">
+                and score = #{score}
+            </if>
+            <if test="simpleContent != null and simpleContent != ''">
+                and simple_content = #{simpleContent}
+            </if>
+            <if test="country != null and country != ''">
+                and Country = #{country}
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                and img_url = #{imgUrl}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into t_film(name, eng_name, language, type, show_type, director, actors, length, first_data, content, score, simple_content, Country, img_url)
+        values (#{name}, #{engName}, #{language}, #{type}, #{showType}, #{director}, #{actors}, #{length}, #{firstData}, #{content}, #{score}, #{simpleContent}, #{country}, #{imgUrl})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_film(name, eng_name, language, type, show_type, director, actors, length, first_data, content, score, simple_content, Country, img_url)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.name}, #{entity.engName}, #{entity.language}, #{entity.type}, #{entity.showType}, #{entity.director}, #{entity.actors}, #{entity.length}, #{entity.firstData}, #{entity.content}, #{entity.score}, #{entity.simpleContent}, #{entity.country}, #{entity.imgUrl})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into t_film(name, eng_name, language, type, show_type, director, actors, length, first_data, content, score, simple_content, Country, img_url)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.engName}, #{entity.language}, #{entity.type}, #{entity.showType}, #{entity.director}, #{entity.actors}, #{entity.length}, #{entity.firstData}, #{entity.content}, #{entity.score}, #{entity.simpleContent}, #{entity.country}, #{entity.imgUrl})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        eng_name = values(eng_name),
+        language = values(language),
+        type = values(type),
+        show_type = values(show_type),
+        director = values(director),
+        actors = values(actors),
+        length = values(length),
+        first_data = values(first_data),
+        content = values(content),
+        score = values(score),
+        simple_content = values(simple_content),
+        Country = values(Country),
+        img_url = values(img_url)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update t_film
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="engName != null and engName != ''">
+                eng_name = #{engName},
+            </if>
+            <if test="language != null and language != ''">
+                language = #{language},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="showType != null and showType != ''">
+                show_type = #{showType},
+            </if>
+            <if test="director != null and director != ''">
+                director = #{director},
+            </if>
+            <if test="actors != null and actors != ''">
+                actors = #{actors},
+            </if>
+            <if test="length != null and length != ''">
+                length = #{length},
+            </if>
+            <if test="firstData != null">
+                first_data = #{firstData},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="simpleContent != null and simpleContent != ''">
+                simple_content = #{simpleContent},
+            </if>
+            <if test="country != null and country != ''">
+                Country = #{country},
+            </if>
+            <if test="imgUrl != null and imgUrl != ''">
+                img_url = #{imgUrl},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from t_film where id = #{id}
+    </delete>
+
+</mapper>
+
