@@ -28,12 +28,13 @@ public class TCinemaController {
      * 分页查询
      *
      * @param tCinema 筛选条件
-     * @param pageRequest      分页对象
+     * @param page
      * @return 查询结果
      */
     @GetMapping
-    public ResponseEntity<Page<TCinema>> queryByPage(TCinema tCinema, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.tCinemaService.queryByPage(tCinema, pageRequest));
+    public ResponseEntity<Page<TCinema>> queryByPage(TCinema tCinema, int page) {
+
+        return ResponseEntity.ok(this.tCinemaService.queryByPage(tCinema, PageRequest.of(page,3)));
     }
 
     /**

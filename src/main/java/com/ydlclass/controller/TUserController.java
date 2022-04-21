@@ -28,12 +28,12 @@ public class TUserController {
      * 分页查询
      *
      * @param tUser 筛选条件
-     * @param pageRequest      分页对象
+     * @param page    分页对象
      * @return 查询结果
      */
     @GetMapping
-    public ResponseEntity<Page<TUser>> queryByPage(TUser tUser, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.tUserService.queryByPage(tUser, pageRequest));
+    public ResponseEntity<Page<TUser>> queryByPage(TUser tUser, int page) {
+        return ResponseEntity.ok(this.tUserService.queryByPage(tUser, PageRequest.of(page,3)));
     }
 
     /**

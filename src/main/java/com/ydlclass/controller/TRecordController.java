@@ -28,12 +28,12 @@ public class TRecordController {
      * 分页查询
      *
      * @param tRecord 筛选条件
-     * @param pageRequest      分页对象
+     * @param page     分页对象
      * @return 查询结果
      */
     @GetMapping
-    public ResponseEntity<Page<TRecord>> queryByPage(TRecord tRecord, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.tRecordService.queryByPage(tRecord, pageRequest));
+    public ResponseEntity<Page<TRecord>> queryByPage(TRecord tRecord, int page) {
+        return ResponseEntity.ok(this.tRecordService.queryByPage(tRecord, PageRequest.of(page,3)));
     }
 
     /**

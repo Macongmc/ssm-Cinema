@@ -28,12 +28,12 @@ public class TFilmController {
      * 分页查询
      *
      * @param tFilm 筛选条件
-     * @param pageRequest      分页对象
+     * @param page
      * @return 查询结果
      */
     @GetMapping
-    public ResponseEntity<Page<TFilm>> queryByPage(TFilm tFilm, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.tFilmService.queryByPage(tFilm, pageRequest));
+    public ResponseEntity<Page<TFilm>> queryByPage(TFilm tFilm, int page) {
+        return ResponseEntity.ok(this.tFilmService.queryByPage(tFilm, PageRequest.of(page,3)));
     }
 
     /**

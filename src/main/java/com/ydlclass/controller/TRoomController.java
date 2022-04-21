@@ -28,12 +28,12 @@ public class TRoomController {
      * 分页查询
      *
      * @param tRoom 筛选条件
-     * @param pageRequest      分页对象
+     * @param
      * @return 查询结果
      */
     @GetMapping
-    public ResponseEntity<Page<TRoom>> queryByPage(TRoom tRoom, PageRequest pageRequest) {
-        return ResponseEntity.ok(this.tRoomService.queryByPage(tRoom, pageRequest));
+    public ResponseEntity<Page<TRoom>> queryByPage(TRoom tRoom, int page) {
+        return ResponseEntity.ok(this.tRoomService.queryByPage(tRoom, PageRequest.of(page,3)));
     }
 
     /**
